@@ -162,10 +162,10 @@ function showMsg() {
       if (
         notifyTimes.some((x) => x[0] === now[0] && (!x[1] || x[1] === now[1]))
       ) {
-        $.msg($.name, "", `\n${$.result.join("\n")}`);
+        $.msg($.name, "", `${$.result.join("\n")}`);
       }
     } else {
-      $.msg($.name, "", `\n${$.result.join("\n")}`);
+      $.msg($.name, "", `${$.result.join("\n")}`);
     }
     resolve();
   });
