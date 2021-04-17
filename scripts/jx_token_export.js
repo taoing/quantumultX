@@ -1,7 +1,6 @@
 /**
 *
-Name:财富岛提现
-Address: 京喜App ====>>>> 全民赚大钱
+Name: 打印京喜token(京喜token已保存在qx中)
 
 * 获取京喜tokens方式
 * 打开京喜农场，手动完成任意任务，必须完成任务领到水滴，提示获取cookie成功
@@ -32,7 +31,7 @@ http-request ^^https\:\/\/m\.jingxi\.com\/jxcfd\/consume\/CashOut script-path=ht
 *
 **/
 
-const $ = new Env("京喜财富岛提现");
+const $ = new Env("打印京喜token");
 const JD_API_HOST = "https://m.jingxi.com/";
 const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
 const jdTokenNode = $.isNode() ? require('./jdJxncTokens.js') : '';
@@ -46,6 +45,8 @@ $.strPgUUNum = '';
 $.userName = '';
 
 const jxUA = "jdpingou;iPhone;4.2.2;13.7;2fa503e847f89c05c577fb5be2c5e202ec1c0fc0;network/wifi;model/iPhone12,1;appBuild/100426;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/24;pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 13_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148";
+var isDone = false;
+var tryTime = 0;
 
 !(async () => {
   if (!getCookies()) return;
@@ -55,12 +56,12 @@ const jxUA = "jdpingou;iPhone;4.2.2;13.7;2fa503e847f89c05c577fb5be2c5e202ec1c0fc
     $.currentToken = $.tokenArr[i];
     if ($.currentCookie) {
       $.userName =  decodeURIComponent($.currentCookie.match(/pt_pin=(.+?);/) && $.currentCookie.match(/pt_pin=(.+?);/)[1]);
+      let jxTokenStr = JSON.stringify($.currentToken);
       $.log(`\n开始【京东账号${i + 1}】${$.userName}`);
-
-      await cashOut();
+      $.log(`Cookie: ${$.currentCookie}`)
+      $.log(`jxToken: ${jxTokenStr}`);
     }
   }
-  await showMsg();
 })()
   .catch((e) => $.logErr(e))
   .finally(() => $.done());
@@ -80,6 +81,9 @@ function cashOut() {
           let sErrMsg = body['sErrMsg'];
           if (iRet == 0) {
             sErrMsg = "今天手气太棒了, 成功提现";
+            isDone = true;
+          } else if (iRet == 4014) {
+            isDone = true;
           }
           $.result.push(`【${$.userName}】\n ${sErrMsg}`);
           resolve(sErrMsg);

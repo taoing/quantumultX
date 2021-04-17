@@ -58,7 +58,7 @@ var tryTime = 0;
     if ($.currentCookie) {
       $.userName =  decodeURIComponent($.currentCookie.match(/pt_pin=(.+?);/) && $.currentCookie.match(/pt_pin=(.+?);/)[1]);
       $.log(`\n开始【京东账号${i + 1}】${$.userName}`);
-      while (!isDone && tryTime < 10) {
+      while (!isDone && tryTime < 5) {
         await cashOut();
         tryTime += 1;
       }
@@ -79,15 +79,14 @@ function cashOut() {
       async (err, resp, data) => {
         try {
           $.log(data);
-          var { iRet, sErrMsg } = JSON.parse(data);
-          $.log(`原始提现结果: ${sErrMsg}`);
-          if (!sErrMsg) {
-            sErrMsg = "今天手气太棒了";
+          let body = JSON.parse(data);
+          let iRet = body['iRet'];
+          let sErrMsg = body['sErrMsg'];
+          if (iRet == 0) {
+            sErrMsg = "今天手气太棒了, 成功提现";
             isDone = true;
-          } else {
-            if (iRet == 4014) {
-              isDone = true;
-            }
+          } else if (iRet == 4014) {
+            isDone = true;
           }
           $.result.push(`【${$.userName}】\n ${sErrMsg}`);
           resolve(sErrMsg);
