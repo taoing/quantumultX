@@ -4,7 +4,7 @@
  */
 const $ = new Env("手机狂欢城优惠券兑换");
 const JD_API_HOST = "https://carnivalcity.m.jd.com";
-const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
+const jdCookieNode = $.isNode() ? require("../jdCookie.js") : "";
 $.result = [];
 
 let context = {};
@@ -173,7 +173,8 @@ function exchange() {
           let body = JSON.parse(data);
           let code = body["code"];
           let message = body["msg"];
-          if (code !== undefined  && code != null) {
+          if (code !== undefined  && code != null && code !== 1002) {
+            // code = 1002 提示火爆
             context.isDone = true;
           }
           $.result.push(`【${$.userName}】\n ${message}`);
