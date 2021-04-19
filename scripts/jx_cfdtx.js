@@ -74,10 +74,11 @@ function cashOut() {
       ), 
       async (err, resp, data) => {
         try {
-          $.log(data);
+          $.log("原始响应:", data);
           let body = JSON.parse(data);
           let iRet = body['iRet'];
           let sErrMsg = body['sErrMsg'];
+          // iRet: 0|提现成功, 4012|提现额度已达每日上限, 4014|今日现金池已抢空
           if (iRet == 0) {
             sErrMsg = "今天手气太棒了, 提现成功";
           }
