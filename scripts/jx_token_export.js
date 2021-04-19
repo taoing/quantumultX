@@ -137,7 +137,7 @@ function getCookies() {
 function getTokens() {
   if ($.isNode()) {
     Object.keys(jdTokenNode).forEach((item) => {
-      $.tokenArr.push(jdTokenNode[item] ? JSON.parse(jdTokenNode[item]) : '{}');
+      $.tokenArr.push(jdTokenNode[item] ? JSON.parse(jdTokenNode[item]) : {});
     })
   } else {
     $.tokenArr = JSON.parse($.getdata('jx_tokens') || '[]');

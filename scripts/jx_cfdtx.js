@@ -79,10 +79,9 @@ function cashOut() {
           let iRet = body['iRet'];
           let sErrMsg = body['sErrMsg'];
           if (iRet == 0) {
-            sErrMsg = "今天手气太棒了, 成功提现";
+            sErrMsg = "今天手气太棒了, 提现成功";
           }
           $.result.push(`【${$.userName}】\n ${sErrMsg}`);
-          resolve(sErrMsg);
         } catch (e) {
           $.logErr(e, resp);
         } finally {
@@ -133,7 +132,7 @@ function getCookies() {
 function getTokens() {
   if ($.isNode()) {
     Object.keys(jdTokenNode).forEach((item) => {
-      $.tokenArr.push(jdTokenNode[item] ? JSON.parse(jdTokenNode[item]) : '{}');
+      $.tokenArr.push(jdTokenNode[item] ? JSON.parse(jdTokenNode[item]) : {});
     })
   } else {
     $.tokenArr = JSON.parse($.getdata('jx_tokens') || '[]');

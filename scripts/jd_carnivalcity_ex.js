@@ -4,7 +4,7 @@
  */
 const $ = new Env("手机狂欢城优惠券兑换");
 const JD_API_HOST = "https://carnivalcity.m.jd.com";
-const jdCookieNode = $.isNode() ? require("../jdCookie.js") : "";
+const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
 $.result = [];
 
 let context = {};
@@ -142,7 +142,7 @@ context.maxTry = 5;
 
 function exchange() {
   return new Promise(async (resolve) => {
-    let timestamp = new Date().getTime();
+    let timestamp = "" + new Date().getTime();
     let param = {
       id: 2,
       t: timestamp
@@ -164,7 +164,7 @@ function exchange() {
         'Accept-Language': 'zh-cn',
         'Cookie': $.currentCookie,
         'timestamp': timestamp,
-        'sign': timestampSign(param)
+        'sign': sign(param)
       }
     };
     $.get(url, async (err, resp, data) => {
@@ -188,13 +188,13 @@ function exchange() {
   });
 }
 
-function timestampSign(param) {
+function sign(param) {
   let arr = [];
   for (let i in param) {
     arr.push(i + "=" + param[i]);
   }
-  let attStr = arr.sort().join("");
-  return $.md5(attStr + context.md5AppKey + param["t"]);
+  let arrStr = arr.sort().join("");
+  return $.md5(arrStr + context.md5AppKey + param["t"]);
 }
 
 function getCookies() {
