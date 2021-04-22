@@ -4,7 +4,7 @@
  脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 
  id可能会变, 需要寻找直播抓包
- 0 0-23 * * * https://raw.githubusercontent.com/taoing/quantumultX/master/scripts/jd_redrain_8.js, tag=整点京豆雨10豆, enabled=true
+ 0 0-23 * * * https://raw.githubusercontent.com/taoing/quantumultX/master/scripts/jd_redrain_10.js, tag=整点京豆雨10豆, enabled=true
 */
 const $ = new Env('整点京豆雨10豆');
 let allMessage = '';
