@@ -7,7 +7,7 @@ let JxTokens = [
   '',//账号一;
   '',//账号一;
 ];
-// 判断环境变量里面是否有京东ck
+// 判断环境变量里面是否有京喜token
 let jxToken = process.env.JX_TOKEN;
 if (jxToken) {
   if (jxToken.indexOf('&') > -1) {
