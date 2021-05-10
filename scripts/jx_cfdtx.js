@@ -36,14 +36,13 @@ const $ = new Env("京喜财富岛提现");
 const JD_API_HOST = "https://m.jingxi.com/";
 const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
 const jdTokenNode = $.isNode() ? require('./jdJxncTokens.js') : '';
-$.result = [];
+const notify = $.isNode() ? require("./sendNotify") : "";
+
+let allMessage = '';
 $.cookieArr = [];
 $.currentCookie = '';
 $.tokenArr = [];
 $.currentToken = {};
-$.strPhoneID = '';
-$.strPgUUNum = '';
-$.userName = '';
 
 const jxUA = "jdpingou;iPhone;4.2.2;13.7;2fa503e847f89c05c577fb5be2c5e202ec1c0fc0;network/wifi;model/iPhone12,1;appBuild/100426;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/24;pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 13_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148";
 
@@ -53,14 +52,17 @@ const jxUA = "jdpingou;iPhone;4.2.2;13.7;2fa503e847f89c05c577fb5be2c5e202ec1c0fc
   for (let i = 0; i < $.cookieArr.length; i++) {
     $.currentCookie = $.cookieArr[i];
     $.currentToken = $.tokenArr[i];
+    $.index = i + 1;
     if ($.currentCookie) {
       $.userName =  decodeURIComponent($.currentCookie.match(/pt_pin=(.+?);/) && $.currentCookie.match(/pt_pin=(.+?);/)[1]);
-      $.log(`\n开始【京东账号${i + 1}】${$.userName}`);
-
+      $.log(`\n开始【京东账号${$.index}】${$.userName}`);
       await cashOut();
     }
   }
-  await showMsg();
+  if (allMessage) {
+    if ($.isNode()) await notify.sendNotify($.name, allMessage);
+    $.msg($.name, '', allMessage);
+  }
 })()
   .catch((e) => $.logErr(e))
   .finally(() => $.done());
@@ -82,7 +84,7 @@ function cashOut() {
           if (iRet == 0) {
             sErrMsg = "今天手气太棒了, 提现成功";
           }
-          $.result.push(`【${$.userName}】\n ${sErrMsg}`);
+          allMessage += `京东账号${$.index} ${$.userName}\n提现结果: ${sErrMsg}${$.index !== $.cookieArr.length ? '\n\n' : ''}`;
         } catch (e) {
           $.logErr(e, resp);
         } finally {
@@ -146,25 +148,6 @@ function getTokens() {
     return false;
   }
   return true;
-}
-
-function showMsg() {
-  return new Promise((resolve) => {
-    if ($.notifyTime) {
-      const notifyTimes = $.notifyTime.split(",").map((x) => x.split(":"));
-      const now = $.time("HH:mm").split(":");
-      $.log(`\n${JSON.stringify(notifyTimes)}`);
-      $.log(`\n${JSON.stringify(now)}`);
-      if (
-        notifyTimes.some((x) => x[0] === now[0] && (!x[1] || x[1] === now[1]))
-      ) {
-        $.msg($.name, "", `${$.result.join("\n")}`);
-      }
-    } else {
-      $.msg($.name, "", `${$.result.join("\n")}`);
-    }
-    resolve();
-  });
 }
 
 // prettier-ignore
