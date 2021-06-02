@@ -21,4 +21,4 @@ obj['ddwTodayPool'] = todayPool;
 obj['strCashProgress'] = exchangeRate;
 body = jsonpPrefix + JSON.stringify(obj) + suffix;
 
-$done({body});
+$done(body);
