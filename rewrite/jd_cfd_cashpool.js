@@ -5,7 +5,8 @@
 let body = $response.body;
 let url = $request.url;
 
-console.log('京喜财富岛提现现金池额度查询 UserCashOutState:', url);
+console.log('京喜财富岛提现现金池额度查询 UserCashOutState: ' + url);
+console.log('响应: ' + body);
 
 let jsonpPrefix = body.substring(0, body.indexOf('{'));
 let suffix = body.substring(body.indexOf('}') + 1);
