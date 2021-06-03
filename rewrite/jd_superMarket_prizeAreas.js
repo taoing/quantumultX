@@ -13,7 +13,6 @@ let prizeAreas = result.areas;
 for (let i = 0; i < prizeAreas.length; i++) {
     let area = prizeAreas[i];
     if (area.areaId === 6) {
-        area.type = 0;
         let prizes = area.prizes;
         for (let j = 0; j < prizes.length; j++) {
             prizes[j].status = 0;
