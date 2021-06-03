@@ -16,7 +16,6 @@ for (let i = 0; i < prizeAreas.length; i++) {
         area.type = 0;
         let prizes = area.prizes;
         for (let j = 0; j < prizes.length; j++) {
-            prizes[j].type = 2;
             prizes[j].status = 0;
         }
         break;
