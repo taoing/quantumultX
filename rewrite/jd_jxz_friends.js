@@ -13,14 +13,14 @@ let rewrite = false;
 
 !(async () => {
     let originPks = data.datas;
-    if (originPks) {
+    if (originPks.length > 0) {
         let rlist = await filterPks(originPks);
         if (rlist.length === 0) {
             // 查询第二页
             for (let i = 2; i < 22; i++) {
                 originPks = await getUserFriendsPage(i);
                 rlist = await filterPks(originPks);
-                if (rlist) {
+                if (rlist.length > 0) {
                     break;
                 }
             }
@@ -103,7 +103,7 @@ function getScore(pin) {
 
 async function filterPks(pkList) {
     let newPkList = [];
-    if (pkList) {
+    if (pkList.length > 0) {
         for (let i = 0; i < pkList.length; i++) {
             let item = pkList[i];
             if (item.leftAcceptPkNum > 0 && item.pkStatus !== 4) {
