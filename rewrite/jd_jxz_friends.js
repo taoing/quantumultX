@@ -3,6 +3,7 @@
  */
 const $ = new Env('京享值PK好友列表');
 const USER_AGENT = "jdapp;iPhone;10.0.1;13.7;b4eecccd6390af2df77401baeddfa6bb199be987;network/wifi;model/iPhone12,1;addressid/138425760;appBuild/167685;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1";
+const myPin = '109912ce317991bcdcca46aae737b4f2';
 const myScore = 7340;
 
 let body = $response.body;
@@ -11,17 +12,20 @@ let pks = [];
 let rewrite = false;
 
 !(async () => {
-    let origin_pks = data.datas;
-    if (origin_pks) {
-        for (let i = 0; i < origin_pks.length; i++) {
-            let item = origin_pks[i];
-            if (item.leftAcceptPkNum > 0 && item.pkStatus !== 4) {
-                let score = await getScore(item.friendPin);
-                if (score < myScore) {
-                    pks.push(item);
+    let originPks = data.datas;
+    if (originPks) {
+        let rlist = await filterPks(originPks);
+        if (rlist.length === 0) {
+            // 查询第二页
+            for (let i = 2; i < 22; i++) {
+                originPks = await getUserFriendsPage(i);
+                rlist = await filterPks(originPks);
+                if (rlist) {
+                    break;
                 }
             }
         }
+        pks = rlist;
         rewrite = true;
         if (pks.length === 0) {
             let remainOne = {
@@ -95,6 +99,61 @@ function getScore(pin) {
             }
         });
     }));
+}
+
+async function filterPks(pkList) {
+    let newPkList = [];
+    if (pkList) {
+        for (let i = 0; i < pkList.length; i++) {
+            let item = pkList[i];
+            if (item.leftAcceptPkNum > 0 && item.pkStatus !== 4) {
+                let score = await getScore(item.friendPin);
+                if (score < myScore) {
+                    newPkList.push(item);
+                }
+            }
+        }
+    }
+    return newPkList;
+}
+
+function getUserFriendsPage(pageNo = 1, pageSize = 10) {
+    console.log(`获取好友分页列表 pageNo: ${pageNo}, pageSize: ${pageSize}`);
+    return new Promise(resolve => {
+        let options = {
+            "url": `https://pengyougou.m.jd.com/like/jxz/getUserFriendsPage?appId=dafbe42d5bff9d82298e5230eb8c3f79&lkEPin=${myPin}&pageNo=${pageNo}&pageSize=${pageSize}&actId=8`,
+            "headers": {
+                "Referer": "https://game-cdn.moxigame.cn/ClickEliminate/IntegralPK_jd/thirdapp/index.html?&token=AAFgwYjmADD1CrUNjDlWrIKSUE5xguJH3wmor9ZeStzbDq5cXG2Me0PSQgXJvT5bAgJv_DErW1E&returnurl=https%3A%2F%2Fprodev.m.jd.com%2Fmall%2Factive%2F45njQg88Vym1s2EGp9aV6cPvqecw%2Findex.html%3Ftttparams%3DImfQnGideyJnTG5nIjoiMTE0LjM3OTc2NiIsImdMYXQiOiIzMC42MDE0NzEifQ8%253D%253D%26babelChannel%3Dttt1%26qdsource%3Dapp%26lng%3D114.362856%26lat%3D30.577543%26sid%3Dab2735c8cec04b1db8d32b4f406fef7w%26un_area%3D17_1381_50717_52133%23%2Findex&tttparams=ImfQnGideyJnTG5nIjoiMTE0LjM3OTc2NiIsImdMYXQiOiIzMC42MDE0NzEifQ8%3D%3D&babelChannel=ttt1&lng=114.362856&lat=30.577543&sid=ab2735c8cec04b1db8d32b4f406fef7w&un_area=17_1381_50717_52133&friendPin=109912ce317991bcdcca46aae737b4f2",
+                "Host": "pengyougou.m.jd.com",
+                "Content-Type": "application/json",
+                "Origin": "https://game-cdn.moxigame.cn",
+                "Connection": "keep-alive",
+                "Accept": " */*",
+                "User-Agent": USER_AGENT,
+                "Accept-Encoding": "gzip,deflate,br",
+                "Accept-Language": "zh-cn",
+            }
+        };
+        let result = [];
+        $.get(options, (err, resp, data) => {
+            try {
+                if (err) {
+                    $.logErr(err)
+                } else {
+                    if (data) {
+                        data = JSON.parse(data);
+                        result = data.datas;
+                    } else {
+                        $.log('京东服务器返回空数据');
+                    }
+                }
+            } catch (e) {
+                $.logErr(e)
+            } finally {
+                resolve(result);
+            }
+        });
+    });
 }
 
 // prettier-ignore
