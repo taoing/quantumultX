@@ -1,10 +1,17 @@
 /*
-京享值好友列表重写
+京享值好友列表重写: 保留京享值低于自己的好友
+
+QuantumultX:
+[MITM]
+hostname = pengyougou.m.jd.com
+
+^https://pengyougou.m.jd.com/like/jxz/getUserFriendsPage\?actId=8.+ url script-response-body https://raw.githubusercontent.com/taoing/quantumultX/master/rewrite/jd_jxz_friends.js
+
  */
 const $ = new Env('京享值PK好友列表');
 const USER_AGENT = "jdapp;iPhone;10.0.1;13.7;b4eecccd6390af2df77401baeddfa6bb199be987;network/wifi;model/iPhone12,1;addressid/138425760;appBuild/167685;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1";
-const myPin = '109912ce317991bcdcca46aae737b4f2';
-const myScore = 7340;
+const myPin = '109912ce317991bcdcca46aae737b4f2'; // 填写自己的pk pin
+const myScore = 7340; // 填写自己的京享值
 
 let body = $response.body;
 let data = JSON.parse(body);
@@ -56,7 +63,7 @@ let rewrite = false;
         if (rewrite) {
             data.datas = pks;
             let newData = JSON.stringify(data);
-            console.log("newData:\n" + newData);
+            console.log("京享值低于自己的好友列表:\n" + newData);
             $.done(newData);
         } else {
             $.done();
@@ -106,7 +113,8 @@ async function filterPks(pkList) {
     if (pkList.length > 0) {
         for (let i = 0; i < pkList.length; i++) {
             let item = pkList[i];
-            if (item.leftAcceptPkNum > 0 && item.pkStatus !== 4) {
+            // 保留1或2个京享值低于自己好友即可, 多余无用; pkStatus===4 表示已pk, 需要排除
+            if (newPkList.length < 2 && item.leftAcceptPkNum > 0 && item.pkStatus !== 4) {
                 let score = await getScore(item.friendPin);
                 if (score < myScore) {
                     newPkList.push(item);
