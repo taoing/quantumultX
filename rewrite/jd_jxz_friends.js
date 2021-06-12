@@ -15,7 +15,7 @@ let rewrite = false;
     if (origin_pks) {
         for (let i = 0; i < origin_pks.length; i++) {
             let item = origin_pks[i];
-            if (item.leftAcceptPkNum > 0) {
+            if (item.leftAcceptPkNum > 0 && item.pkStatus !== 4) {
                 let score = await getScore(item.friendPin);
                 if (score < myScore) {
                     pks.push(item);
@@ -61,7 +61,6 @@ function getScore(pin) {
                 if (err) {
                     $.logErr(err)
                 } else {
-                    console.log("查询京享值响应: " + data);
                     if (data) {
                         data = JSON.parse(data);
                         result = data.data;
