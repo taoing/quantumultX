@@ -23,6 +23,26 @@ let rewrite = false;
             }
         }
         rewrite = true;
+        if (pks.length === 0) {
+            let remainOne = {
+                "friendPin":"2320eb36486e9243af3f403d9d9413b5",
+                "friendMaskPin":null,
+                "channel":null,
+                "channelStr":null,
+                "createTime":null,
+                "jdImage":null,
+                "jdNickname":"luyazhi",
+                "relationAssist":null,
+                "winNum":238,
+                "relation":2,
+                "pkStatus":4,
+                "leftLunchPkNum":30,
+                "leftAcceptPkNum":29,
+                "isMain":null
+            };
+            // 默认保留一个, 防止不能加载下一页
+            pks.push(remainOne);
+        }
     }
 })()
     .catch((e) => {
