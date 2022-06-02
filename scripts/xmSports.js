@@ -86,7 +86,7 @@ function change_step(app_token, user_id) {
   console.log(timeFormat(localtime()))
   return new Promise(resolve => {
     const options = {
-      "url": `https://api-mifit-cn2.huami.com/v1/data/band_data.json?&t=${$.t}`,
+      "url": `https://api-mifit-cn.huami.com/v1/data/band_data.json?&t=${$.t}`,
       "body": `userid=${user_id.toString()}&last_sync_data_time=1597306380&device_type=0&last_deviceid=DA932FFFFE8816E7&data_json=${dataJSON}`,
       "headers": {
         "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8",
