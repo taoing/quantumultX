@@ -1,0 +1,42 @@
+{
+  "id": "xmSports.config.sub",
+  "name": "小米运动配置订阅",
+  "author": "@taoing",
+  "icon": "https://avatars.githubusercontent.com/u/27018162?v=4",
+  "repo": "https://github.com/taoing/quantumultX",
+  "apps": [
+    {
+      "id": "xmSports",
+      "name": "小米运动",
+      "keys": [
+        "xmMinStep",
+        "xmMaxStep"
+      ],
+      "settings": [
+        {
+          "id": "xmMinStep",
+          "name": "步数最小值",
+          "val": "10000",
+          "type": "number",
+          "placeholder": "默认 10000",
+          "desc": "按需填写, 不要设置的太大"
+        },
+        {
+          "id": "xmMaxStep",
+          "name": "步数最大值",
+          "val": "15000",
+          "type": "number",
+          "placeholder": "默认 15000",
+          "desc": "按需填写, 不要设置的太大"
+        }
+      ],
+      "author": "@taoing",
+      "repo": "https://github.com/taoing/quantumultX",
+      "script": "https://raw.githubusercontent.com/taoing/quantumultX/master/scripts/xmSports_new.js",
+      "icons": [
+        "https://raw.githubusercontent.com/58xinian/icon/master/xmyd_mini.png",
+        "https://raw.githubusercontent.com/58xinian/icon/master/xmyd.png"
+      ]
+    }
+  ]
+}
