@@ -80,10 +80,12 @@ async function start() {
 function change_step(app_token, user_id) {
   console.log(timeFormat(localtime()));
   let dataJSON = getDataJson();
+  let ts = parseInt($.t / 1000);
+  let last_sync_ts = ts - parseInt((16 + Math.random() * 7) * 3600);
   return new Promise(resolve => {
     const options = {
       "url": `https://api-mifit-cn.huami.com/v1/data/band_data.json?&t=${$.t}`,
-      "body": `userid=${user_id.toString()}&last_sync_data_time=1597306380&device_type=0&last_deviceid=DA932FFFFE8816E7&data_json=${dataJSON}`,
+      "body": `userid=${user_id.toString()}&last_sync_data_time=${last_sync_ts}&device_type=0&last_deviceid=DA932FFFFE8816E7&data_json=${dataJSON}`,
       "headers": {
         "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8",
         "apptoken": app_token,
