@@ -80,6 +80,7 @@ async function start() {
 function change_step(app_token, user_id) {
   console.log(timeFormat(localtime()));
   let dataJSON = getDataJson();
+  //以秒为单位的时间戳
   let ts = parseInt($.t / 1000);
   let last_sync_ts = ts - parseInt((16 + Math.random() * 7) * 3600);
   return new Promise(resolve => {
